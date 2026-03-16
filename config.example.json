@@ -1,9 +1,0 @@
-{
-  "access_key": "",
-  "secret_key": "",
-  "endpoint": "ACCOUNT_ID.r2.cloudflarestorage.com",
-  "bucket": "md-web",
-  "region": "auto",
-  "public_url": "https://pub-XXXX.r2.dev",
-  "expire_days": 30
-}

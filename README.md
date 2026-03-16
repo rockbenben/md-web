@@ -31,19 +31,24 @@ This skill requires an **S3-compatible object storage bucket** with public acces
 3. Set permissions to **Object Read & Write** (or **Admin Read & Write** if you want automatic file expiry — see `expire_days` below)
 4. Optionally restrict scope to the specific bucket
 5. After creation, you'll see:
-   - **Access Key ID** → **access_key** in the config
-   - **Secret Access Key** → **secret_key** in the config
+   - **Access Key ID** → environment variable `MD_WEB_ACCESS_KEY`
+   - **Secret Access Key** → environment variable `MD_WEB_SECRET_KEY`
    - **S3 Endpoint** in the format `https://ACCOUNT_ID.r2.cloudflarestorage.com`
-     → Remove `https://`, the rest is the **endpoint**
+     → Remove `https://`, the rest is the **endpoint** in the config
 
-### Step 3: Tell the AI
+### Step 3: Configure
 
-On first use, the AI will ask for these fields:
+**Environment variables** (credentials — set in your AI agent's configuration):
+
+| Variable          | Description         |
+| ----------------- | ------------------- |
+| MD_WEB_ACCESS_KEY | API access key ID   |
+| MD_WEB_SECRET_KEY | API secret access key |
+
+**Config file** (non-sensitive — the AI will create `config.json` on first use):
 
 | Field       | Required | Description                                                               | Example                               |
 | ----------- | -------- | ------------------------------------------------------------------------- | ------------------------------------- |
-| access_key  | Yes      | API access key ID                                                         | `a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4`    |
-| secret_key  | Yes      | API secret access key                                                     | `a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6...` |
 | endpoint    | Yes      | S3 endpoint (without `https://`)                                          | `ACCOUNT_ID.r2.cloudflarestorage.com` |
 | bucket      | Yes      | Bucket name                                                               | `md-web`                              |
 | public_url  | Yes      | Public access URL (custom domain recommended)                             | `https://pub-XXXX.r2.dev`             |
@@ -51,8 +56,6 @@ On first use, the AI will ask for these fields:
 | expire_days | No       | Days before uploaded files auto-delete (default `30`, `0` = keep forever) | `30`                                  |
 
 > **Tip**: R2.dev URLs have rate limits. For production use, bind a custom domain to your bucket and use that as `public_url`.
-
-The AI will automatically save these to `config.json`. No repeat setup needed.
 
 ## Usage
 
@@ -74,7 +77,6 @@ The AI returns a link — click to view the rendered document in your browser.
 md-web/
 ├── SKILL.md              # AI instruction file
 ├── upload.js             # Upload script (pure Node.js, zero dependencies)
-├── config.example.json   # Example config (copy to config.json)
 ├── config.json           # Bucket config (created by AI on first use, gitignored)
 ├── README.md             # This document
 ├── README.zh.md          # Chinese documentation
