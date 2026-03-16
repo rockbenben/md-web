@@ -31,6 +31,6 @@ jobs:
           CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
 
       - name: Publish skill
-        run: clawhub publish . --yes
+        run: clawhub publish .
         env:
           CLAWHUB_CONFIG_PATH: /tmp/clawhub/config.json
