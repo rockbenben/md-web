@@ -7,26 +7,34 @@ var fs = require("node:fs");
 var path = require("node:path");
 
 var SCRIPT_DIR = __dirname;
-var CONFIG_PATH = path.join(SCRIPT_DIR, "config.json");
 var DEPLOYED_FLAG = path.join(SCRIPT_DIR, ".deployed");
 
 // ── Load Configuration ──
-var CONFIG;
-try {
-  CONFIG = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8"));
-} catch (e) {
-  console.error("CONFIG_MISSING: " + CONFIG_PATH);
-  process.exit(1);
-}
+// Credentials from environment variables (sensitive — never written to disk)
+// Other settings from config.json (non-sensitive — managed by AI)
+var CONFIG_PATH = path.join(SCRIPT_DIR, "config.json");
+var fileConfig = {};
+try { fileConfig = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8")); } catch (_) {}
 
-var REQUIRED = ["access_key", "secret_key", "endpoint", "bucket", "public_url"];
-var missing = REQUIRED.filter(function (k) { return !CONFIG[k]; });
-if (missing.length) {
-  console.error("Missing config fields: " + missing.join(", "));
-  console.error("Edit: " + CONFIG_PATH);
+var CONFIG = {
+  access_key: process.env.MD_WEB_ACCESS_KEY || "",
+  secret_key: process.env.MD_WEB_SECRET_KEY || "",
+  endpoint: fileConfig.endpoint || "",
+  bucket: fileConfig.bucket || "",
+  public_url: (fileConfig.public_url || "").replace(/\/+$/, ""),
+  region: fileConfig.region || "auto",
+  expire_days: (fileConfig.expire_days != null && fileConfig.expire_days >= 0) ? fileConfig.expire_days : 30,
+};
+
+if (!CONFIG.access_key || !CONFIG.secret_key) {
+  console.error("MISSING_ENV: MD_WEB_ACCESS_KEY, MD_WEB_SECRET_KEY");
   process.exit(1);
 }
-CONFIG.public_url = CONFIG.public_url.replace(/\/+$/, "");
+var missing = ["endpoint", "bucket", "public_url"].filter(function (k) { return !CONFIG[k]; });
+if (missing.length) {
+  console.error("MISSING_CONFIG: " + missing.join(", ") + " in " + CONFIG_PATH);
+  process.exit(1);
+}
 
 var CONTENT_TYPES = {
   ".html": "text/html; charset=utf-8",
