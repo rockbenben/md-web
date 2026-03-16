@@ -5,31 +5,32 @@ on:
   push:
     branches: [main]
     paths:
-      - 'SKILL.md'
-      - 'upload.js'
-      - 'docsify-server/**'
-      - 'README.md'
-      - 'README.zh.md'
-      - 'LICENSE'
-      - 'config.example.json'
+      - "SKILL.md"
+      - "upload.js"
+      - "docsify-server/**"
+      - "config.example.json"
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: "24"
 
       - name: Install ClawHub CLI
         run: npm install -g clawhub
 
       - name: Authenticate
-        run: clawhub login --token "$CLAWHUB_TOKEN"
+        run: |
+          mkdir -p /tmp/clawhub
+          printf '{"registry":"https://clawhub.ai","token":"%s"}' "$CLAWHUB_TOKEN" > /tmp/clawhub/config.json
         env:
           CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
 
       - name: Publish skill
         run: clawhub publish . --yes
+        env:
+          CLAWHUB_CONFIG_PATH: /tmp/clawhub/config.json
