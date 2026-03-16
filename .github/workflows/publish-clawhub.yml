@@ -8,7 +8,6 @@ on:
       - "SKILL.md"
       - "upload.js"
       - "docsify-server/**"
-      - "config.example.json"
 
 jobs:
   publish:
