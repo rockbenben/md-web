@@ -1,10 +1,10 @@
 ---
 name: md-web
-version: 1.0.1
+version: 1.0.2
 description: Publish markdown files as shareable web pages and return a clickable link.
 tags: [markdown, web, docsify, s3, preview]
 homepage: https://github.com/rockbenben/md-web
-metadata: {clawdbot: {emoji: "🌐", requires: {bins: ["node"], env: ["MD_WEB_ACCESS_KEY", "MD_WEB_SECRET_KEY"]}, files: ["upload.js", "docsify-server/**", "README.md", "README.zh.md"]}}
+metadata: {clawdbot: {emoji: "🌐", requires: {bins: ["node"]}, files: ["upload.js", "docsify-server/**", "README.md", "README.zh.md"]}}
 ---
 
 # MD Web - Markdown to Web Page
@@ -25,7 +25,7 @@ Upload raw `.md` files to an S3-compatible storage bucket, where a pre-deployed 
 
 ### Step 1: Check configuration
 
-Check that `MD_WEB_ACCESS_KEY` and `MD_WEB_SECRET_KEY` environment variables are set, and `{SKILL_DIR}/config.json` exists with non-empty fields. If either is missing, follow the **Configuration** section below first.
+Check if `{SKILL_DIR}/config.json` exists. If it does NOT exist or has empty fields, follow the **Configuration** section below first.
 
 ### Step 2: Prepare the markdown file
 
@@ -51,32 +51,33 @@ Example success output:
 
 ## Configuration
 
-This only needs to happen once.
+This only needs to happen once. On subsequent runs, `config.json` already exists.
 
 1. Tell the user this skill needs an S3-compatible storage bucket with public access. Point them to `{SKILL_DIR}/README.md` for detailed setup instructions (Cloudflare R2 / AWS S3 / other S3-compatible services).
-2. Ask the user to set these **environment variables** (credentials — never stored on disk):
-   - **MD_WEB_ACCESS_KEY**: API access key ID
-   - **MD_WEB_SECRET_KEY**: API secret access key
-3. Ask the user to provide these fields for the config file:
+2. Ask the user to provide these 5 required fields:
+   - **access_key**: API access key ID
+   - **secret_key**: API secret access key
    - **endpoint**: S3 endpoint hostname, without `https://` (e.g., `ACCOUNT_ID.r2.cloudflarestorage.com`)
    - **bucket**: bucket name
    - **public_url**: public access URL. If the user has a custom domain bound to the bucket, use that (e.g., `https://docs.example.com`); otherwise use the default R2.dev URL (e.g., `https://pub-XXXX.r2.dev`). **Recommend custom domain** for production use — R2.dev URLs have rate limits.
-4. Ask about optional settings:
+3. Ask about optional settings:
    - **region**: S3 region. Use `auto` for Cloudflare R2, or the actual region for AWS S3 (e.g., `us-east-1`). Default is `auto`.
    - **expire_days**: how many days before uploaded markdown files are automatically deleted from the bucket. Default is `30`. Set to `0` to keep files forever. The script sets an S3 lifecycle rule automatically — only timestamped uploads are affected; Docsify server files are never expired. **Note**: this requires the API token to have **Admin Read & Write** permission (not just Object Read & Write). If the token lacks permission, the script will warn but still upload normally — the user can set the lifecycle rule manually in the Cloudflare Dashboard instead.
-5. Write the config to `{SKILL_DIR}/config.json`:
+4. Write the config to `{SKILL_DIR}/config.json`:
 
 ```json
 {
+  "access_key": "...",
+  "secret_key": "...",
   "endpoint": "...",
   "bucket": "...",
-  "public_url": "...",
   "region": "auto",
+  "public_url": "...",
   "expire_days": 30
 }
 ```
 
-6. Then proceed with the upload.
+5. Then proceed with the upload.
 
 ## Important notes
 
@@ -96,7 +97,7 @@ This skill connects only to the S3 endpoint configured by the user in `config.js
 ## Security & privacy
 
 - All uploaded content is **publicly accessible** via the generated URL.
-- Credentials are read from environment variables (`MD_WEB_ACCESS_KEY`, `MD_WEB_SECRET_KEY`) managed by the host platform — the skill never writes secrets to disk.
+- Credentials (`access_key`, `secret_key`) are stored locally in `config.json` (gitignored) and only sent to the user's own S3 endpoint for authentication.
 - No telemetry, analytics, or data collection by the skill itself.
 - `upload.js` uses only Node.js built-in modules — no third-party dependencies.
 

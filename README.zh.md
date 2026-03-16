@@ -31,24 +31,19 @@
 3. 权限选择 **对象读和写**（Object Read & Write）。如需自动过期功能（见下方 `expire_days`），需选择 **管理员读和写**（Admin Read & Write）
 4. 范围可选 **仅限指定桶** → 选择刚才创建的桶
 5. 创建后会显示：
-   - **Access Key ID** → 环境变量 `MD_WEB_ACCESS_KEY`
-   - **Secret Access Key** → 环境变量 `MD_WEB_SECRET_KEY`
+   - **Access Key ID** → 配置中的 **access_key**
+   - **Secret Access Key** → 配置中的 **secret_key**
    - **S3 端点** 格式为 `https://ACCOUNT_ID.r2.cloudflarestorage.com`
-     → 去掉 `https://`，剩余部分就是配置中的 **endpoint**
+     → 去掉 `https://`，剩余部分就是 **endpoint**
 
-### 第三步：配置
+### 第三步：告诉 AI
 
-**环境变量**（凭证 — 在 AI 代理的配置中设置）：
-
-| 变量              | 说明              |
-| ----------------- | ----------------- |
-| MD_WEB_ACCESS_KEY | API 访问密钥 ID   |
-| MD_WEB_SECRET_KEY | API 秘密访问密钥  |
-
-**配置文件**（非敏感信息 — AI 首次使用时自动创建 `config.json`）：
+首次使用 skill 时，AI 会询问以下信息：
 
 | 字段        | 必填 | 说明                                              | 示例                                  |
 | ----------- | ---- | ------------------------------------------------- | ------------------------------------- |
+| access_key  | 是   | API 访问密钥 ID                                   | `a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4`    |
+| secret_key  | 是   | API 秘密访问密钥                                  | `a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6...` |
 | endpoint    | 是   | S3 端点（不含 https://）                          | `ACCOUNT_ID.r2.cloudflarestorage.com` |
 | bucket      | 是   | 存储桶名称                                        | `md-web`                              |
 | public_url  | 是   | 公共访问 URL（推荐自定义域名）                    | `https://pub-XXXX.r2.dev`             |
@@ -56,6 +51,8 @@
 | expire_days | 否   | 上传文件自动删除天数（默认 `30`，`0` = 永久保留） | `30`                                  |
 
 > **提示**：R2.dev 子域有速率限制，生产环境建议为桶绑定自定义域名作为 `public_url`。
+
+AI 会自动将配置写入 `config.json`，之后不再需要重复配置。
 
 ## 使用方式
 
