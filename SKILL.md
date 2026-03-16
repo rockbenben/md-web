@@ -1,10 +1,20 @@
 ---
 name: md-web
-version: 1.0.2
+version: 1.0.3
 description: Publish markdown files as shareable web pages and return a clickable link.
 tags: [markdown, web, docsify, s3, preview]
-homepage: https://github.com/rockbenben/md-web
-metadata: {clawdbot: {emoji: "🌐", requires: {bins: ["node"]}, files: ["upload.js", "docsify-server/**", "README.md", "README.zh.md"]}}
+metadata:
+  openclaw:
+    emoji: "🌐"
+    homepage: https://github.com/rockbenben/md-web
+    requires:
+      bins: [node]
+      config: [config.json]
+    files:
+      - upload.js
+      - docsify-server/**
+      - README.md
+      - README.zh.md
 ---
 
 # MD Web - Markdown to Web Page
