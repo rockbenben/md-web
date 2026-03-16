@@ -1,0 +1,35 @@
+name: Publish to ClawHub
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'SKILL.md'
+      - 'upload.js'
+      - 'docsify-server/**'
+      - 'README.md'
+      - 'README.zh.md'
+      - 'LICENSE'
+      - 'config.example.json'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install ClawHub CLI
+        run: npm install -g clawhub
+
+      - name: Authenticate
+        run: clawhub login --token "$CLAWHUB_TOKEN"
+        env:
+          CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
+
+      - name: Publish skill
+        run: clawhub publish . --yes
