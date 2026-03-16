@@ -3,8 +3,8 @@ name: md-web
 version: 1.0.0
 description: Publish markdown files as shareable web pages and return a clickable link.
 tags: [markdown, web, docsify, s3, preview]
-files: ["upload.js", "docsify-server/**", "config.example.json", "README.md", "README.zh.md", "LICENSE"]
-requires: {bins: ["node"]}
+homepage: https://github.com/rockbenben/md-web
+metadata: {clawdbot: {emoji: "🌐", requires: {bins: ["node"]}, files: ["upload.js", "docsify-server/**", "config.example.json", "README.md", "README.zh.md"]}}
 ---
 
 # MD Web - Markdown to Web Page
@@ -85,3 +85,20 @@ This only needs to happen once. On subsequent runs, `config.json` already exists
 - Do NOT send long markdown content to the chat unless upload fails.
 - `upload.js` uses only Node.js built-in modules (zero dependencies).
 - All Docsify assets (JS/CSS) are bundled locally — no external CDN dependency at runtime.
+
+## External endpoints
+
+This skill connects only to the S3 endpoint configured by the user in `config.json`. No data is sent to the skill author or any third-party service.
+
+| Endpoint | Purpose | Data sent |
+|----------|---------|-----------|
+| User's S3 endpoint (`config.json → endpoint`) | Upload .md files and Docsify server assets | File content, S3 auth headers |
+
+## Security & privacy
+
+- All uploaded content is **publicly accessible** via the generated URL.
+- Credentials (`access_key`, `secret_key`) are stored locally in `config.json` (gitignored) and only sent to the user's own S3 endpoint for authentication.
+- No telemetry, analytics, or data collection by the skill itself.
+- `upload.js` uses only Node.js built-in modules — no third-party dependencies.
+
+By using this skill, markdown content is uploaded to **your own** S3-compatible storage bucket and made publicly accessible. No data is sent to the skill author or any third-party service. Only install if you trust the storage provider you configure.
