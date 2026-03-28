@@ -1,8 +1,8 @@
 ---
 name: md-web
-version: 1.0.4
-description: Publish markdown files as shareable web pages and return a clickable link.
-tags: [markdown, web, docsify, s3, preview]
+version: 1.0.5
+description: Turn any content into a web page with a shareable URL. Use when the user wants to preview, generate, share, export, or publish content as a web page.
+tags: [markdown, web, docsify, s3, preview, share, publish, export]
 homepage: https://github.com/rockbenben/md-web
 
 metadata:
@@ -23,11 +23,12 @@ Upload raw `.md` files to an S3-compatible storage bucket, where a pre-deployed 
 
 **Uploaded content is publicly accessible.** Only use this skill when the user explicitly requests it:
 
-- User asks to **"show as web page"**, **"share as a link"**, **"preview in browser"**, or similar
-- User asks to **"generate a file"** for sharing
+- User wants to **show or preview content as a web page** in a browser
+- User wants to **generate, export, or publish** content as a web page
+- User wants a **shareable link** to content
+- User wants output **delivered as a web page** rather than as long text in chat
+- User wants to **compile or organize content and present it as a web page**
 - User invokes this skill by name (e.g., `/md-web`)
-
-**Never auto-trigger.** Do not upload content just because it is long. If you think the user might benefit from a web page, suggest it — but wait for confirmation before uploading.
 
 ## How to use this skill
 
@@ -90,7 +91,7 @@ This only needs to happen once. On subsequent runs, `config.json` already exists
 ## Important notes
 
 - Do NOT generate HTML. Just upload the raw `.md` file — Docsify handles rendering.
-- Do NOT send long markdown content to the chat unless upload fails.
+- Do NOT send markdown content to the chat unless upload fails.
 - `upload.js` uses only Node.js built-in modules (zero dependencies).
 - All Docsify assets (JS/CSS) are bundled locally — no external CDN dependency at runtime.
 
