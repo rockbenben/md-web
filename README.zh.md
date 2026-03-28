@@ -2,13 +2,13 @@
 
 [English](README.md)
 
-将 Markdown 文件上传到 S3 兼容存储桶，通过 Docsify 自动渲染为网页。适用于 AI 分享长文本、代码项目等场景，避免在对话中发送大量内容。
+将任意内容转为网页并生成可分享的链接。上传 Markdown 到 S3 兼容存储桶，由 Docsify 自动渲染。
 
 ## 快速开始
 
 1. 安装 skill：`clawhub install md-web`
 2. 首次使用时，AI 会引导你填写存储桶配置
-3. 之后告诉 AI「用网页展示 xxx.md」即可将内容分享为链接
+3. 之后告诉 AI「用网页展示」即可将内容分享为链接
 
 ## 存储桶配置
 
@@ -40,15 +40,15 @@
 
 首次使用 skill 时，AI 会询问以下信息：
 
-| 字段        | 必填 | 说明                                              | 示例                                  |
-| ----------- | ---- | ------------------------------------------------- | ------------------------------------- |
-| access_key  | 是   | API 访问密钥 ID                                   | `a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4`    |
-| secret_key  | 是   | API 秘密访问密钥                                  | `a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6...` |
-| endpoint    | 是   | S3 端点（不含 https://）                          | `ACCOUNT_ID.r2.cloudflarestorage.com` |
-| bucket      | 是   | 存储桶名称                                        | `md-web`                              |
-| public_url  | 是   | 公共访问 URL（推荐自定义域名）                    | `https://pub-XXXX.r2.dev`             |
+| 字段        | 必填 | 说明                                                     | 示例                                  |
+| ----------- | ---- | -------------------------------------------------------- | ------------------------------------- |
+| access_key  | 是   | API 访问密钥 ID                                          | `a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4`    |
+| secret_key  | 是   | API 秘密访问密钥                                         | `a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6...` |
+| endpoint    | 是   | S3 端点（不含 https://）                                 | `ACCOUNT_ID.r2.cloudflarestorage.com` |
+| bucket      | 是   | 存储桶名称                                               | `md-web`                              |
+| public_url  | 是   | 公共访问 URL（推荐自定义域名）                           | `https://pub-XXXX.r2.dev`             |
 | region      | 否   | S3 区域（R2 用 `auto`，AWS S3 填实际区域如 `us-east-1`） | `auto`                                |
-| expire_days | 否   | 上传文件自动删除天数（默认 `30`，`0` = 永久保留） | `30`                                  |
+| expire_days | 否   | 上传文件自动删除天数（默认 `30`，`0` = 永久保留）        | `30`                                  |
 
 > **提示**：R2.dev 子域有速率限制，生产环境建议为桶绑定自定义域名作为 `public_url`。
 
@@ -59,9 +59,10 @@ AI 会自动将配置写入 `config.json`，之后不再需要重复配置。
 上传的内容通过生成的 URL **公开可访问**。仅在你明确要求时触发：
 
 ```text
-用网页展示 README.md
+做成网页
+预览 README.md
 /md-web path/to/file.md
-把这段内容生成一个可分享的链接
+分享为链接
 ```
 
 AI 会返回一个链接，点击即可在浏览器中阅读渲染后的文档。

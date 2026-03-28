@@ -1,6 +1,6 @@
 # MD Web
 
-Upload Markdown files to an S3-compatible storage bucket and render them as web pages via Docsify. Designed for AI agents to share long text, code projects, etc., without flooding the conversation.
+Turn any content into a web page with a shareable URL. Uploads Markdown to an S3-compatible storage bucket, rendered by Docsify.
 
 [中文文档](README.zh.md)
 
@@ -8,7 +8,7 @@ Upload Markdown files to an S3-compatible storage bucket and render them as web 
 
 1. Install the skill: `clawhub install md-web`
 2. On first use, the AI will guide you through bucket configuration
-3. After that, tell the AI "show this as a web page" whenever you want to share content as a link
+3. After that, tell the AI "share as a link" whenever you want to publish content as a web page
 
 ## Bucket Setup
 
@@ -59,9 +59,10 @@ The AI will automatically save these to `config.json`. No repeat setup needed.
 Uploaded content is **publicly accessible** via the generated URL. The skill only runs when you explicitly ask for it:
 
 ```text
-show README.md as a web page
+show as a web page
+publish this online
 /md-web path/to/file.md
-generate a shareable file for this content
+share as a link
 ```
 
 The AI returns a link — click to view the rendered document in your browser.
